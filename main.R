@@ -26,12 +26,19 @@ scale_feature <- function(feature, vmin, vmax) {
   return(feature)
 }
 
-
-draw_feature <- function(canvas, feature) {
+draw_feature <- function(canvas,
+                         feature,
+                         ystart = 0,
+                         xstart = 0) {
   dimCanvas <- dim(canvas)
   dimFeature <- dim(feature)
-  ystart <- sample(1:dimCanvas[1], 1)
-  xstart <- sample(1:dimCanvas[2], 1)
+  
+  if (ystart < 1 | ystart > dimCanvas[1]) {
+    ystart <- sample(1:dimCanvas[1], 1)
+  }
+  if (xstart < 1 | xstart > dimCanvas[2]) {
+    xstart <- sample(1:dimCanvas[2], 1)
+  }
   
   for (y in 1:dimFeature[1]) {
     ypos <- ystart + y - 1
@@ -52,18 +59,19 @@ draw_feature <- function(canvas, feature) {
 }
 
 # var
-lengthCanvas <- 100
+lengthCanvas <- c(100, 100)
 min <- 230
 max <- 65536
-lengthRGB <- 256
+lengthColor <- 256
 
 # gradient
 colfunc <- colorRampPalette(c("blue", "yellow", "red"))
-gradient <- colfunc(lengthRGB)
+gradient <- colfunc(lengthColor)
 
 # execution
-canvas <- matrix(min, lengthCanvas, lengthCanvas)
-feature <- generate_feature(lengthCanvas, lengthCanvas, min, max)
+canvas <- matrix(min, lengthCanvas[1], lengthCanvas[2])
+feature <-
+  generate_feature(lengthCanvas[1], lengthCanvas[2], min, max)
 canvas <- draw_feature(canvas, feature)
 
 image(canvas, col = gradient)
