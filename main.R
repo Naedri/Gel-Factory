@@ -10,7 +10,7 @@ generate_feature <- function(height, width, minValue, maxValue) {
     # Proportionate x axis to y axis intensity
     x <- x / max(x) * y[pos]
     x[is.nan(x)] <- 0
-    xy[pos,] <- x
+    xy[pos, ] <- x
   }
   xy <- scale_feature(xy, minValue, maxValue)
   
@@ -58,11 +58,36 @@ draw_feature <- function(canvas,
   return(canvas)
 }
 
+
+add_feat <- function(canvas, nfeat, nlong, min, max) {
+  dimCanvas <- dim(canvas)
+  
+  for (i in 1:nfeat) {
+    feature <-
+      generate_feature(sample((dimCanvas[1] / 20):(dimCanvas[1] / 10), 1),
+                       sample((dimCanvas[2] / 20):(dimCanvas[2] / 5), 1),
+                       min, max)
+    canvas <- draw_feature(canvas, feature)
+  }
+  
+  for (i in 1:nlong) {
+    feature <-
+      generate_feature(sample((dimCanvas[1] * 1.5):(dimCanvas[1] * 2), 1),
+                       sample((dimCanvas[2] / 20):(dimCanvas[2] / 10), 1),
+                       min, max)
+    canvas <- draw_feature(canvas, feature)
+  }
+  
+  return(canvas)
+}
+
 # var
-lengthCanvas <- c(100, 100)
+lengthCanvas <- c(1000, 1000)
 min <- 230
 max <- 65536
 lengthColor <- 256
+featureLong <- 3
+featurePoint <- 15 - featureLong
 
 # gradient
 colfunc <- colorRampPalette(c("blue", "yellow", "red"))
@@ -72,6 +97,6 @@ gradient <- colfunc(lengthColor)
 canvas <- matrix(min, lengthCanvas[1], lengthCanvas[2])
 feature <-
   generate_feature(lengthCanvas[1], lengthCanvas[2], min, max)
-canvas <- draw_feature(canvas, feature)
+canvas <- add_feat(canvas, featurePoint, featureLong, min, max)
 
-image(canvas, col = gradient)
+image(t(canvas), col = gradient)
