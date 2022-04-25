@@ -1,14 +1,14 @@
 # function
 
-generate_feature <- function(length, width, minValue, maxValue) {
-  y <- dgamma(seq(0, 25, by = 25 / (length - 1)), 2, 0.2)
+generate_feature <- function(height, width, minValue, maxValue) {
+  y <- dgamma(seq(0, 25, by = 25 / (height - 1)), 2, 0.2)
   y <- y
-  xy <- matrix(NA, length, width)
+  xy <- matrix(NA, height, width)
   
-  for (pos in seq(length)) {
+  for (pos in seq(height)) {
     x <- dnorm(seq(-1.5, 1.5, by = 3 / (width - 1)), 0, y[pos] * 2)
     # Proportionate x axis to y axis intensity
-    x <- x / max(x) * y [pos]
+    x <- x / max(x) * y[pos]
     x[is.nan(x)] <- 0
     xy[pos,] <- x
   }
@@ -33,5 +33,10 @@ max <- 65536
 lengthRGB <- 256
 
 # execution
+colfunc <- colorRampPalette(c("blue", "yellow", "red"))
+gradient <- colfunc(lengthRGB)
+
 feature <- generate_feature(lengthImg, lengthImg, min, max)
-image(t(feature), col = grey(seq(0, 1, length = lengthRGB)))
+image(t(feature), col = gradient)
+# image(t(feature), col = heat.colors(lengthRGB))
+# image(t(feature), col=grey(seq(0, 1, length = lengthRGB)))
