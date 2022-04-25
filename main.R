@@ -1,5 +1,4 @@
 # function
-
 generate_feature <- function(height, width, minValue, maxValue) {
   y <- dgamma(seq(0, 25, by = 25 / (height - 1)), 2, 0.2)
   y <- y
@@ -18,40 +17,40 @@ generate_feature <- function(height, width, minValue, maxValue) {
 }
 
 
-scale_feature <- function(feature, vmin, vmax) {
+scale_feature <- function(feature, minValue, maxValue) {
   m <- max(feature)
-  coef <- vmax - vmin
-  feature <- (feature / m) * coef + vmin
+  coef <- maxValue - minValue
+  feature <- (feature / m) * coef + minValue
   
   return(feature)
 }
 
 draw_feature <- function(canvas,
                          feature,
-                         ystart = 0,
-                         xstart = 0) {
+                         yStart = 0,
+                         xStart = 0) {
   dimCanvas <- dim(canvas)
   dimFeature <- dim(feature)
   
-  if (ystart < 1 | ystart > dimCanvas[1]) {
-    ystart <- sample(1:dimCanvas[1], 1)
+  if (yStart < 1 | yStart > dimCanvas[1]) {
+    yStart <- sample(1:dimCanvas[1], 1)
   }
-  if (xstart < 1 | xstart > dimCanvas[2]) {
-    xstart <- sample(1:dimCanvas[2], 1)
+  if (xStart < 1 | xStart > dimCanvas[2]) {
+    xStart <- sample(1:dimCanvas[2], 1)
   }
   
   for (y in 1:dimFeature[1]) {
-    ypos <- ystart + y - 1
-    if (ypos > dimCanvas[1]) {
+    yPos <- yStart + y - 1
+    if (yPos > dimCanvas[1]) {
       next
     }
     for (x in 1:dimFeature[2]) {
-      xpos <- xstart + x - 1
-      if (xpos > dimCanvas[2]) {
+      xPos <- xStart + x - 1
+      if (xPos > dimCanvas[2]) {
         next
       }
-      canvas[ypos, xpos] <-
-        max(c(canvas[ypos, xpos], feature[y, x]))
+      canvas[yPos, xPos] <-
+        max(c(canvas[yPos, xPos], feature[y, x]))
     }
   }
   
@@ -75,10 +74,20 @@ add_feat <- function(canvas, nfeat, nlong, min, max) {
       generate_feature(sample((dimCanvas[1] * 1.5):(dimCanvas[1] * 2), 1),
                        sample((dimCanvas[2] / 20):(dimCanvas[2] / 10), 1),
                        min, max)
-    canvas <- draw_feature(canvas, feature)
+    yStart <- sample(1:(dimCanvas[1] / 8), 1)
+    xStart <- sample(1:(dimCanvas[2] / 3), 1)
+    canvas <- draw_feature(canvas, feature, xStart, yStart)
   }
   
   return(canvas)
+}
+
+
+image_export <- function(plot, name, color) {
+  name <- paste0(name, ".png")
+  png(filename = name)
+  image(plot, col = color)
+  dev.off()
 }
 
 # var
@@ -89,14 +98,15 @@ lengthColor <- 256
 featureLong <- 3
 featurePoint <- 15 - featureLong
 
-# gradient
-colfunc <- colorRampPalette(c("blue", "yellow", "red"))
+# gradient from brewer "Spectral" palette
+colfunc <- colorRampPalette(c("#3288BD", "#FFFFBF", "#D53E4F"))
 gradient <- colfunc(lengthColor)
 
 # execution
 canvas <- matrix(min, lengthCanvas[1], lengthCanvas[2])
 feature <-
-  generate_feature(lengthCanvas[1], lengthCanvas[2], min, max)
+  generate_feature(dim(canvas)[1], dim(canvas)[2], min, max)
 canvas <- add_feat(canvas, featurePoint, featureLong, min, max)
 
-image(t(canvas), col = gradient)
+# export
+image_export(t(canvas), "output/Rplot", gradient)
