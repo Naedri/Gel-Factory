@@ -1,7 +1,6 @@
 # function
 generate_feature <- function(height, width, minValue, maxValue) {
   y <- dgamma(seq(0, 25, by = 25 / (height - 1)), 2, 0.2)
-  y <- y
   xy <- matrix(NA, height, width)
   
   for (pos in seq(height)) {
@@ -58,10 +57,10 @@ draw_feature <- function(canvas,
 }
 
 
-add_feat <- function(canvas, nfeat, nlong, min, max) {
+add_feat <- function(canvas, pointFeat, lineFeat, min, max) {
   dimCanvas <- dim(canvas)
   
-  for (i in 1:nfeat) {
+  for (i in 1:pointFeat) {
     feature <-
       generate_feature(sample((dimCanvas[1] / 20):(dimCanvas[1] / 10), 1),
                        sample((dimCanvas[2] / 20):(dimCanvas[2] / 5), 1),
@@ -69,7 +68,7 @@ add_feat <- function(canvas, nfeat, nlong, min, max) {
     canvas <- draw_feature(canvas, feature)
   }
   
-  for (i in 1:nlong) {
+  for (i in 1:lineFeat) {
     feature <-
       generate_feature(sample((dimCanvas[1] * 1.5):(dimCanvas[1] * 2), 1),
                        sample((dimCanvas[2] / 20):(dimCanvas[2] / 10), 1),
