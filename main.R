@@ -54,6 +54,7 @@ draw_feature <- function(canvas, feature, yStart, xStart) {
 add_feat <- function(canvas, pointFeat, lineFeat, min, max) {
   dimCanvas <- dim(canvas)
   
+   pointBorder <- dimCanvas[2] / 4
   
   if (pointFeat > 0) {
     for (i in 1:pointFeat) {
@@ -62,7 +63,7 @@ add_feat <- function(canvas, pointFeat, lineFeat, min, max) {
       feature <- generate_feature(height, width, min, max)
       
       yStart <- sample(0:dimCanvas[1], 1)
-      xStart <- sample(0:dimCanvas[2], 1)
+      xStart <- sample(pointBorder:dimCanvas[2], 1)
       canvas <- draw_feature(canvas, feature, yStart, xStart)
     }
   }
@@ -74,7 +75,7 @@ add_feat <- function(canvas, pointFeat, lineFeat, min, max) {
       feature <- generate_feature(height, width, min, max)
       
       yStart <- sample(0:(dimCanvas[1] / 8), 1)
-      xStart <- sample(0:(dimCanvas[2] / 3), 1)
+      xStart <- sample(0:pointBorder, 1)
       canvas <- draw_feature(canvas, feature, yStart, xStart)
     }
   }
