@@ -31,6 +31,7 @@ scale_feature <- function(feature, minValue, maxValue) {
 draw_feature <- function(canvas, feature, yStart, xStart) {
   dimCanvas <- dim(canvas)
   dimFeature <- dim(feature)
+  minCanvas <- min(canvas)
   
   for (y in 1:dimFeature[1]) {
     yPos <- yStart + y
@@ -42,8 +43,13 @@ draw_feature <- function(canvas, feature, yStart, xStart) {
       if (xPos < 1 | xPos > dimCanvas[2]) {
         next
       }
-      canvas[yPos, xPos] <-
-        max(c(canvas[yPos, xPos], feature[y, x]))
+      if (canvas[yPos, xPos] > minCanvas) {
+        # already stained
+        value <- canvas[yPos, xPos] + feature[y, x]
+      } else {
+        value <- max(c(canvas[yPos, xPos], feature[y, x]))
+      }
+      canvas[yPos, xPos] <- value
     }
   }
   
