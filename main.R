@@ -6,7 +6,6 @@ generate_feature <- function(height, width, minValue, maxValue) {
   
   for (pos in seq(height)) {
     x <- dnorm(seq(-1.5, 1.5, by = 3 / (width - 1)), 0, y[pos] * 2)
-    # Proportionate x axis to y axis intensity
     x <- x / max(x) * y[pos]
     x[is.nan(x)] <- 0
     xy[pos, ] <- x
@@ -92,9 +91,9 @@ image_export <- function(plot, name, color) {
 
 # var
 lengthCanvas <- c(1000, 1000)
-min <- 230
-max <- 65536
-lengthColor <- 256
+min <- 230 # minimal Value
+max <- 65536 # maximal Value
+lengthColor <- 256 # RGB flavours
 featureLong <- 3
 featurePoint <- 15 - featureLong
 
@@ -103,10 +102,10 @@ colfunc <- colorRampPalette(c("#3288BD", "#FFFFBF", "#D53E4F"))
 gradient <- colfunc(lengthColor)
 
 # execution
+#feature <- generate_feature(lengthCanvas[1], lengthCanvas[2], min, max)
 canvas <- matrix(min, lengthCanvas[1], lengthCanvas[2])
-feature <-
-  generate_feature(dim(canvas)[1], dim(canvas)[2], min, max)
 canvas <- add_feat(canvas, featurePoint, featureLong, min, max)
 
 # export
+#image_export(feature, "output/Rplot", gradient)
 image_export(t(canvas), "output/Rplot", gradient)
