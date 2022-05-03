@@ -64,7 +64,7 @@ add_feat <- function(canvas, pointFeat, lineFeat, min, max) {
       
       yStart <- sample(0:dimCanvas[1], 1)
       xStart <- sample(pointBorder:dimCanvas[2], 1)
-      canvas <- draw_feature(canvas, feature, yStart, xStart)
+      canvas <- draw_feature(canvas, feature, xStart, yStart)
     }
   }
   
@@ -76,7 +76,7 @@ add_feat <- function(canvas, pointFeat, lineFeat, min, max) {
       
       yStart <- sample(0:(dimCanvas[1] / 8), 1)
       xStart <- sample(0:pointBorder, 1)
-      canvas <- draw_feature(canvas, feature, yStart, xStart)
+      canvas <- draw_feature(canvas, feature, xStart, yStart)
     }
   }
   
@@ -96,8 +96,8 @@ lengthCanvas <- c(1000, 1000)
 min <- 230
 max <- 65536
 lengthColor <- 256
-featureLong <- 3
-featurePoint <- 12
+featureLong <- 0
+featurePoint <- 1
 
 # gradient from brewer "Spectral" palette
 colfunc <- colorRampPalette(c("#3288BD", "#FFFFBF", "#D53E4F"))
