@@ -12,7 +12,7 @@ generate_feature <- function(height, width, minValue, maxValue) {
     # Proportionate x axis to y axis intensity
     x <- x / max(x) * y[pos]
     x[is.nan(x)] <- 0
-    xy[pos,] <- x
+    xy[pos, ] <- x
   }
   xy <- scale_feature(xy, minValue, maxValue)
   
@@ -28,34 +28,40 @@ scale_feature <- function(feature, minValue, maxValue) {
   return(feature)
 }
 
-draw_feature <- function(canvas, feature, yStart, xStart) {
-  dimCanvas <- dim(canvas)
-  dimFeature <- dim(feature)
-  xMiddle <- floor(dimFeature[2]/2)
-  
-  for (y in 1:dimFeature[1]) {
-    yPos <- yStart + y
-    if (yPos < 1 | yPos > dimCanvas[1]) {
-      next
-    }
-    for (x in 1:dimFeature[2]) {
-      xPos <- xStart + x - xMiddle 
-      if (xPos < 1 | xPos > dimCanvas[2]) {
+draw_feature <-
+  function(canvas, feature, yStart, xStart, middle = TRUE) {
+    dimCanvas <- dim(canvas)
+    dimFeature <- dim(feature)
+    xMiddle <- floor(dimFeature[2] / 2)
+    yStart <- floor(yStart)
+    xStart <- floor(xStart)
+    
+    for (y in 1:dimFeature[1]) {
+      yPos <- yStart + y
+      if (yPos < 1 | yPos > dimCanvas[1]) {
         next
       }
-      canvas[yPos, xPos] <-
-        max(c(canvas[yPos, xPos], feature[y, x]))
+      for (x in 1:dimFeature[2]) {
+        xPos <- xStart + x
+        if (middle) {
+          xPos <- xPos - xMiddle
+        }
+        
+        if (xPos < 1 | xPos > dimCanvas[2]) {
+          next
+        }
+        canvas[yPos, xPos] <-
+          max(c(canvas[yPos, xPos], feature[y, x]))
+      }
     }
+    
+    return(canvas)
   }
-  
-  return(canvas)
-}
 
 
 add_feat <- function(canvas, pointFeat, lineFeat, min, max) {
   dimCanvas <- dim(canvas)
-  
-   pointBorder <- dimCanvas[2] / 4
+  pointBorder <- dimCanvas[2] / 4
   
   if (pointFeat > 0) {
     for (i in 1:pointFeat) {
@@ -75,9 +81,9 @@ add_feat <- function(canvas, pointFeat, lineFeat, min, max) {
       width <- sample((dimCanvas[2] / 20):(dimCanvas[2] / 10), 1)
       feature <- generate_feature(height, width, min, max)
       
-      yStart <- sample(0:(dimCanvas[1] / 8), 1)
+      yStart <- sample(dimCanvas[1] / 10:(dimCanvas[1] / 8), 1)
       xStart <- sample(0:pointBorder, 1)
-      canvas <- draw_feature(canvas, feature, xStart, yStart)
+      canvas <- draw_feature(canvas, feature, xStart, yStart, FALSE)
     }
   }
   
@@ -97,8 +103,8 @@ lengthCanvas <- c(1000, 1000) # (y,x)
 min <- 230
 max <- 65536
 lengthColor <- 256
-featureLong <- 0
-featurePoint <- 1
+featureLong <- 3
+featurePoint <- 12
 
 # gradient from brewer "Spectral" palette
 colfunc <- colorRampPalette(c("#3288BD", "#FFFFBF", "#D53E4F"))
