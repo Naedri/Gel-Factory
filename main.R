@@ -31,6 +31,7 @@ scale_feature <- function(feature, minValue, maxValue) {
 draw_feature <- function(canvas, feature, yStart, xStart) {
   dimCanvas <- dim(canvas)
   dimFeature <- dim(feature)
+  xMiddle <- floor(dimFeature[2]/2)
   
   for (y in 1:dimFeature[1]) {
     yPos <- yStart + y
@@ -38,7 +39,7 @@ draw_feature <- function(canvas, feature, yStart, xStart) {
       next
     }
     for (x in 1:dimFeature[2]) {
-      xPos <- xStart + x
+      xPos <- xStart + x - xMiddle 
       if (xPos < 1 | xPos > dimCanvas[2]) {
         next
       }
@@ -92,7 +93,7 @@ image_export <- function(plot, name, color) {
 }
 
 # var
-lengthCanvas <- c(1000, 1000)
+lengthCanvas <- c(1000, 1000) # (y,x)
 min <- 230
 max <- 65536
 lengthColor <- 256
