@@ -10,7 +10,7 @@ Qualification assignment to allows MMS team better understanding interests and c
 - _main.R_ : contains script to parameter, build and export simulation containing features ;
 - _output/_ : contains exports from the simulation execution plotting the result of a single iteration.
 
-## Function modelling individuals features
+## Function modelling individual features
 
 ### Identification
 
