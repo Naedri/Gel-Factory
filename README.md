@@ -1,8 +1,8 @@
-# MMS-Modelling
+# Gel Factory
 
 ## Purpose
 
-Qualification assignment to allows MMS team better understanding interests and capabilities.
+Qualification assignment allowing next hiring team to better understand interests and capabilities.
 
 ## Contents
 
